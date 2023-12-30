@@ -7,7 +7,7 @@
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <el-form :model="formData" :inline="formData.role === 2" ref="ruleFormRef" :rules="rules" label-width="120px">
+            <el-form :model="formData" ref="ruleFormRef" :rules="rules" label-width="120px" @submit.native.prevent>
                 <el-form-item label="昵称" prop="nickname">
                     <el-input v-model="formData.nickname" />
                 </el-form-item>
@@ -33,7 +33,7 @@
                     <el-input v-model="formData.storeName" />
                 </el-form-item>
                 <el-form-item label="店铺图片" v-if="formData.role === 2" prop="storeImg">
-                    <el-upload accept=".png,.jpg" :show-file-list="false" :http-request="customUpload">
+                    <el-upload class="avatar-uploader" accept=".png,.jpg" :show-file-list="false" :http-request="customUpload" :on-success="uploadSuccess">
                         <img v-if="formData.storeImg" :src="formData.storeImg" class="avatar" />
                         <el-icon v-else class="avatar-uploader-icon">
                             <Plus />
@@ -42,7 +42,9 @@
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button type="primary" @click="submitAction(ruleFormRef)">注册</el-button>
+                  <button
+                          @click="submitAction(ruleFormRef)"
+                          class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">注册</button>
                 </el-form-item>
             </el-form>
 
@@ -56,6 +58,8 @@
 <script setup lang="ts">
 import type { FormInstance, UploadRequestHandler, FormRules } from 'element-plus';
 import { validateEmail, validateIDCard } from '~/utils/validate';
+import {Oss} from "~/utils/oss";
+import type {Result} from "~/types/result";
 const ruleFormRef = ref<FormInstance>()
 const formData = reactive({
     email: '',
@@ -96,24 +100,39 @@ const rules = reactive<FormRules<typeof formData>>({
         { required: true, message: '请上传店铺图片', trigger: 'blur' },
     ],
 })
-const customUpload: UploadRequestHandler = (option) => new Promise(() => { })
+const customUpload: UploadRequestHandler = ({file, onSuccess}) => new Promise((resolve, reject) => {
+  Oss.upload(file).then((res) => {
+    onSuccess(res)
+  }).catch(err=> {
+    reject(err)
+  })
+})
+
+const uploadSuccess = (url: string) => {
+  formData.storeImg = `https://${url}`
+}
 
 const submitAction = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     try {
         await formEl.validate()
-        const response = await $fetch('/api/proxy', {
+        const { code, message } = await $fetch<Result<any>>('/api/proxy', {
             method: 'post',
             body: {
-                url: '/register',
+                url: '/api/public/register',
                 method: 'post',
                 data: formData,
-                headers: {
-                    xxx: '123123'
-                }
             }
         })
-        console.log(response)
+      if (code === 1) {
+        const router = useRouter()
+        await router.push('/login')
+      } else {
+        ElMessage({
+          type: 'error',
+          message
+        })
+      }
     } catch (error) {
         console.log(error)
     }
@@ -122,3 +141,33 @@ const submitAction = async (formEl: FormInstance | undefined) => {
 
 
 </script>
+<style scoped>
+.avatar-uploader .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>
+
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  text-align: center;
+}
+</style>
