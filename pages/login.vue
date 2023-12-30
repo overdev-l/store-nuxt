@@ -7,18 +7,12 @@
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form class="space-y-6" action="#" method="POST" @submit="submitAction">
+            <form class="space-y-6" action="#" method="POST" @submit.prevent="submitAction">
                 <div>
                     <label for="email" class="block text-sm font-medium leading-6 text-gray-900">邮箱</label>
                     <div class="mt-2">
                         <input id="email" name="email" type="email" autocomplete="email" required
-                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    </div>
-                </div>
-                <div>
-                    <label for="nickname" class="block text-sm font-medium leading-6 text-gray-900">昵称</label>
-                    <div class="mt-2">
-                        <input id="nickname" name="nickname" type="text" required
+                               v-model="formData.email"
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
@@ -26,6 +20,7 @@
                     <label for="password" class="block text-sm font-medium leading-6 text-gray-900">密码</label>
                     <div class="mt-2">
                         <input id="password" name="password" type="password" required
+                               v-model="formData.password"
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
@@ -45,18 +40,32 @@
 </template>
 <script setup lang="ts">
 
+import {$fetch} from "ofetch";
+import type {Result} from "~/types/result";
 
+const formData = reactive({
+  email: '',
+  password: ''
+})
 
-const submitAction = (e: any) => {
-    e.preventDefault()
-    const result = {
-        repassword: '',
-        password: '',
-        email: ''
-    } as Record<string, string>
-    const fromData = new FormData(e.target)
-    fromData.forEach((val, key) => {
-        result[key] = val as string
+const submitAction = async () => {
+    const {code, data, message} = await $fetch<Result<any>>('/api/proxy', {
+      method: 'post',
+      body: {
+        url: '/api/public/login',
+        method:'post',
+        data: formData
+      }
     })
+  if (code !== 1) {
+    ElMessage({
+      type: 'error',
+      message
+    })
+    return
+  }
+  const router = useRouter()
+  router.push('/')
+  localStorage.setItem('token', data)
 }
 </script>
