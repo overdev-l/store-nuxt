@@ -42,6 +42,8 @@
 
 import {$fetch} from "ofetch";
 import type {Result} from "~/types/result";
+import { parseJwt } from "~/utils";
+import {UserStore} from "~/store/user";
 
 const formData = reactive({
   email: '',
@@ -67,5 +69,8 @@ const submitAction = async () => {
   const router = useRouter()
   router.push('/')
   localStorage.setItem('token', data)
+  const result = parseJwt()
+  const user = UserStore()
+  user.setUser(result.claims)
 }
 </script>
