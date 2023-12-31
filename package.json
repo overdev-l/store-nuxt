@@ -13,13 +13,13 @@
     "@element-plus/nuxt": "^1.0.7",
     "@nuxt/devtools": "latest",
     "@nuxt/image": "^1.1.0",
-    "@nuxtjs/tailwindcss": "^6.10.1",
-    "daisyui": "^4.4.23",
+    "@nuxtjs/tailwindcss": "^6.10.3",
+    "daisyui": "^4.4.24",
     "element-plus": "^2.4.4",
-    "nuxt": "^3.8.2",
-    "nuxt-icon": "^0.6.7",
+    "nuxt": "^3.9.0",
+    "nuxt-icon": "^0.6.8",
     "nuxt-primevue": "^0.2.2",
-    "vue": "^3.3.10",
+    "vue": "^3.4.3",
     "vue-router": "^4.2.5"
   },
   "dependencies": {

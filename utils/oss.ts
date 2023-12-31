@@ -10,7 +10,10 @@ export class Oss {
                     method: 'post',
                     body: {
                         url: '/api/public/uploadConfig',
-                        method: 'post'
+                        method: 'post',
+                        headers: {
+                            Authorization: ""
+                        }
                     }
                 })
                 callback({
