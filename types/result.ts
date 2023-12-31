@@ -3,3 +3,9 @@ export type Result<T> = {
     message: string
     data: T
 }
+
+export type Request<T> = {
+    url: string,
+    method: string,
+    data: T
+}

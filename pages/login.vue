@@ -41,7 +41,7 @@
 <script setup lang="ts">
 
 import {$fetch} from "ofetch";
-import type {Result} from "~/types/result";
+import type {Request} from "~/types/result";
 import { parseJwt } from "~/utils";
 import {UserStore} from "~/store/user";
 
@@ -51,13 +51,10 @@ const formData = reactive({
 })
 
 const submitAction = async () => {
-    const {code, data, message} = await $fetch<Result<any>>('/api/proxy', {
+    const {code, data, message} = await request<Request<any>>( {
+      url: '/api/public/login',
       method: 'post',
-      body: {
-        url: '/api/public/login',
-        method:'post',
-        data: formData
-      }
+      data: formData as any
     })
   if (code !== 1) {
     ElMessage({

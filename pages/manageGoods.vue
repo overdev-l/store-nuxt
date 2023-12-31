@@ -4,17 +4,46 @@ definePageMeta({
 })
 const productId = ref('')
 const productName=ref('')
-const data = (new Array(8)).fill(0)
+const page=ref(1)
+const limit=ref(10)
+const tableData = ref<any[]>([])
 
-const submitQuery = (e: Event) => {
-    e.preventDefault()
+
+
+const submitQuery = async () => {
+    const {code, data, message} = await request<any>({
+        url: '/api/admin/product/list',
+        method:"POST",
+        data: {
+            id: productId.value,
+            title: productName.value,
+            page: page.value,
+            limit: limit.value,
+            disabled: 0
+        }
+    })
+    if (code !== 1) {
+        ElMessage({
+            type: "error",
+            message
+        })
+        return
+    }
+    tableData.value = data.list
+
 }
+
+watchEffect(() => {
+    submitQuery()
+}, {
+    
+})
 </script>
 
 <template>
     <div class="w-full h-full">
         <div class="w-full h-fit">
-            <form action="" class="flex gap-2 items-end" ref="formRef" @submit="submitQuery">
+            <form action="" class="flex gap-2 items-end" ref="formRef" @submit.prevent="submitQuery">
                 <label class="form-control w-full max-w-xs">
                     <div class="label">
                         <span class="label-text">商品id</span>
@@ -50,26 +79,26 @@ const submitQuery = (e: Event) => {
                 </thead>
                 <tbody>
                     <!-- row 1 -->
-                    <tr v-for="(p, index) in data" :key="index">
+                    <tr v-for="(p, index) in tableData" :key="index">
                         <td>
                             <div class="flex items-center gap-3">
                                 <div class="avatar">
                                     <div class="mask mask-squircle w-12 h-12">
-                                        <img src="/xx.jpg" alt="Avatar Tailwind CSS Component" />
+                                        <img :src="p.cover" alt="Avatar Tailwind CSS Component" />
                                     </div>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <span class="badge badge-ghost badge-sm">蘑菇</span>
+                            <span class="badge badge-ghost badge-sm">{{ p.name }}</span>
                         </td>
                         <td>
-                            <div class="max-w-[150px]">东北大蘑菇大棚培育东北大蘑菇东北大蘑菇大棚培育东北大蘑菇</div>
+                            <div class="max-w-[150px]">{{ p.title }}</div>
                         </td>
-                        <td><span class="badge badge-ghost badge-sm">1000</span></td>
-                        <td><span class="badge badge-ghost badge-sm">200</span></td>
-                        <td><span class="badge badge-ghost badge-sm">xxxxxxxxx</span></td>
-                        <td><span class="badge badge-ghost badge-sm">xxxxxxxxx</span></td>
+                        <td><span class="badge badge-ghost badge-sm">{{ p.stockQuantity }}</span></td>
+                        <td><span class="badge badge-ghost badge-sm">{{ p.price }}</span></td>
+                        <td><span class="">{{ p.storeId }}</span></td>
+                        <td><span class="">{{ p.ownerId }}</span></td>
                         <th>
                             <button class="btn btn-ghost btn-xs">编辑</button>
                             <button class="btn btn-ghost btn-xs">删除</button>

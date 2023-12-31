@@ -23,11 +23,11 @@
                   :class="{ 'md:text-blue-700 text-blue-700': route.path === '/store', 'text-gray-900': route.path !== '/store' }">
                   商城</NuxtLink>
               </li>
-              <li class="flex justify-center items-center">
+              <li class="flex justify-center items-center" v-if="isLogin() && user.role !==1">
                 <ClientOnly>
                   <NuxtLink href="/doshboard"
                   class="block py-2 px-3 hover:text-blue-700 rounded md:bg-transparent  md:p-0 dark:text-white "
-                  :class="{ 'md:text-blue-700 text-blue-700': route.path === '/doshboard', 'text-gray-900': route.path !== '/doshboard' }" v-if="isLogin()">
+                  :class="{ 'md:text-blue-700 text-blue-700': route.path === '/doshboard', 'text-gray-900': route.path !== '/doshboard' }" >
                   工作台</NuxtLink>
                 </ClientOnly>
               </li>
@@ -42,12 +42,13 @@
                   <div class="dropdown" v-else>
                     <div tabindex="0" role="button" class="avatar placeholder btn" >
                       <div class="bg-neutral text-neutral-content rounded-full w-6">
-                        <span>SY</span>
+                        <span>{{ user.nickname }}</span>
                       </div>
                     </div>
                     <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                       <li><a @click="manageOrder">订单管理</a></li>
                       <li><a @click="manageAddress">收货地址</a></li>
+                      <li><a @click="loginOut">退出登陆</a></li>
                     </ul>
                   </div>
                 </ClientOnly>
@@ -65,9 +66,12 @@
   </div>
 </template>
 <script setup lang="ts">
+import { UserStore } from '~/store/user';
+
 
 const route = useRoute()
 const router = useRouter()
+const user = UserStore()
 const cartShow = ref(false)
 const orderShow = ref(false)
 const addressShow = ref(false)
@@ -84,6 +88,18 @@ const manageOrder = () => {
 }
 const manageAddress = () => {
   addressShow.value = true
+}
+
+const loginOut = () => {
+  localStorage.removeItem('token')
+  user.setUser({
+    role: 0,
+    userId: '',
+    nickname: '',
+    email: ''
+  })
+  const router = useRouter()
+  router.push('/login')
 }
 
 const cartClose = () => {

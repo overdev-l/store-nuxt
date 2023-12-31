@@ -1,9 +1,12 @@
 export default defineEventHandler(async (event) => {
-    const body = await readBody(event)
+    const body = await readBody(event) 
+    console.log(body.headers)
     return await $fetch(body.url, {
       baseURL: 'http://127.0.0.1:4000',
       method: body.method,
       body: body.data,
-      headers: body.headers
+      headers: {
+        Authorization: body.headers.Authorization
+      }
     })
   })
