@@ -1,6 +1,6 @@
 <template>
     <ClientOnly>
-        <el-drawer :model-value="value" title="购物车" direction="rtl" :before-close="close">
+        <el-drawer :model-value="value"  title="购物车" direction="rtl" :before-close="close">
             <div class="w-full h-fit grid grid-cols-2 gap-2">
                 <CartItem />
                 <CartItem />
