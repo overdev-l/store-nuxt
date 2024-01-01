@@ -36,7 +36,7 @@
               </li>
               <li class="flex justify-center items-center">
                 <ClientOnly>
-                  <NuxtLink to="/login" v-if="!isLogin()">
+                  <NuxtLink to="/login" v-if="!user.userId">
                     <Icon name="mdi:user" color="black" size="30" class="hover:bg-gray-100 p-1 rounded-sm cursor-pointer"/>
                   </NuxtLink>
                   <div class="dropdown" v-else>

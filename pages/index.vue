@@ -67,9 +67,9 @@
     <section class="w-full py-12 md:py-24 lg:py-32 bg-green-50">
       <div class="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
         <div class="space-y-3">
-          <h2 class="text-3xl font-bold tracking-tighter md:text-4xl">Contact Us</h2>
+          <h2 class="text-3xl font-bold tracking-tighter md:text-4xl">联系我们</h2>
           <p class="mx-auto max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-            Have any questions? Get in touch with us
+            有什么问题请与我们联系。
           </p>
         </div>
         <div class="mx-auto w-full max-w-sm space-y-2">
@@ -77,7 +77,7 @@
               class="inline-flex items-center justify-center rounded-md bg-green-600 px-8 text-sm font-medium text-white transition-colors hover:bg-green-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-800"
               href="#"
           >
-            Contact Us
+            联系我们
           </a>
         </div>
       </div>
@@ -85,29 +85,29 @@
     <section class="w-full py-12 md:py-24 lg:py-32 border-t">
       <div class="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
         <div class="space-y-3">
-          <h2 class="text-3xl font-bold tracking-tighter md:text-4xl">Subscribe to Our Newsletter</h2>
+          <h2 class="text-3xl font-bold tracking-tighter md:text-4xl">订阅最新活动信息</h2>
           <p class="mx-auto max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-            Stay updated with our latest products and offers
+            随时了解我们最新的产品和报价
           </p>
         </div>
         <div class="mx-auto w-full max-w-sm space-y-2">
           <form class="flex space-x-2">
             <input
                 class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 max-w-lg flex-1"
-                placeholder="Enter your email"
+                placeholder="输入你的邮箱"
                 type="email"
             />
             <button
                 class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
                 type="submit"
             >
-              Subscribe
+              提交
             </button>
           </form>
           <p class="text-xs text-gray-500 dark:text-gray-400">
-            We respect your privacy.
+            我们尊重您的隐私。
             <a class="underline underline-offset-2" href="#">
-              Privacy Policy
+              隐私政策
             </a>
           </p>
         </div>
