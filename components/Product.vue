@@ -51,11 +51,14 @@
             <span class="text-lg font-bold">¥2.99/</span>
             <span class="text-sm font-bold">500g</span>
           </div>
-          <button class="py-2 px-3 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-semibold rounded-md shadow focus:outline-none">
+          <button v-if="num <= 0" @click="addProduct" class="py-2 px-3 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-semibold rounded-md shadow focus:outline-none">
             添加到购物车
           </button>
+          <el-badge :value="num" v-if="num > 0">
+            <Icon name="dashicons:cart" size="30" color="#f7be38" class="cursor-pointer" @click="addProduct" />
+          </el-badge>
         </div>
-        <NuxtLink to="/store" class="mt-2 inline-block underline text-sm" href="#">
+        <NuxtLink to="/shopList" class="mt-2 inline-block underline text-sm" href="#">
           前往店铺
         </NuxtLink>
       </div>
