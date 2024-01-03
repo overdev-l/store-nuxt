@@ -69,7 +69,12 @@
 <script setup lang="ts">
 import { ElBadge } from 'element-plus';
 const num = ref(0)
-const addProduct = () => {
+const addProduct = async() => {
     num.value += 1
+  const {code, message} = await request<any>({
+    url: '/api/admin/cart/add',
+    method: 'post',
+    data: undefined
+  })
 }
 </script>
