@@ -151,6 +151,8 @@ const submit = () => {
 const reset = () => {
     page.value = 1
     limit.value = 10
+    productId.value = ''
+    productName.value = ''
     submitQuery()
 }
 
