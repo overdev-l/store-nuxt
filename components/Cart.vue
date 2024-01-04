@@ -8,7 +8,7 @@
                 <div class="flex justify-between items-end">
                     <div class="flex justify-end items-end">
                         <span class="text-sm">¥</span>
-                        <span class="text-xl">200</span>
+                        <span class="text-xl">{{priceAll}}</span>
                     </div>
                     <el-button type="primary">支付</el-button>
                 </div>
@@ -24,6 +24,7 @@ defineProps<{
 }>()
 const emits = defineEmits(["close"])
 const catList = ref<any[]>([])
+const priceAll = ref<number>(0)
 const close =() => {
     emits("close")
 }
@@ -35,6 +36,7 @@ const getList = async() => {
   })
   if (code) {
     catList.value = data.products
+    priceAll.value = data.price
     console.log(catList.value);
     
   }else{
