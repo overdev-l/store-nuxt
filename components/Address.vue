@@ -9,7 +9,7 @@
         </div>
       </el-drawer>
     </ClientOnly>
-    <el-dialog v-model="dialogVisible" title="添加收货地址" width="30%" :before-close="handleClose">
+    <el-dialog v-model="dialogVisible" title="添加收货地址" width="25%" :before-close="handleClose">
       <el-form   ref="ruleFormRef"  :rules="rules" :model="form" label-width="130px">
         <el-form-item label="收货人:" prop="name">
           <el-input v-model="form.name" placeholder="请输入" />
