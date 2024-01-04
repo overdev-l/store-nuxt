@@ -5,7 +5,7 @@
                 <!-- <a class="absolute inset-0 z-10" href="#">
                     <span class="sr-only">View</span>
                 </a> -->
-                <img src="/xx.jpg" alt="Product 1"
+                <img :src="props.cover" alt="Product 1"
                     class="rounded-lg object-cover w-full aspect-square group-hover:opacity-50 transition-opacity" />
                 <div class="grid gap-1 w-full">
                     <div class="flex items-center gap-2">
@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 
-const props = defineProps(['id', 'name', 'amount', 'price']);
+const props = defineProps(['id', 'name', 'amount', 'price', 'cover']);
 const emits = defineEmits(["getList"])
 const updateCart = async(change: number) => {
     let amount = props.amount

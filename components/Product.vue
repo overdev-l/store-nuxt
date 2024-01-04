@@ -72,7 +72,7 @@ const num = ref(0)
 const addProduct = async() => {
   
   const {code, message} = await request<any>({
-    url: '/api/cart/add?id=' + '9e42f78e-a403-11ee-a81d-0242ac110002',
+    url: '/api/cart/add?id=' + '23d60681-a7ff-11ee-a469-0242ac110002',
     method: 'post',
     data: {}
   })

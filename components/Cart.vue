@@ -2,7 +2,7 @@
     <ClientOnly>
         <el-drawer :model-value="value"  title="购物车" direction="rtl" :before-close="close">
             <div class="w-full h-fit grid grid-cols-2 gap-2">
-                <CartItem @getList="getList" v-for="(item,index) in catList" :key="index" :id="item.id" :amount="item.amount" :price="item.price" :name="item.name"/>
+                <CartItem @getList="getList" v-for="(item,index) in catList" :key="index" :id="item.id" :amount="item.amount" :price="item.price" :name="item.name" :cover="item.cover"/>
             </div>
             <template #footer>
                 <div class="flex justify-between items-end">
