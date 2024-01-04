@@ -70,11 +70,16 @@
 import { ElBadge } from 'element-plus';
 const num = ref(0)
 const addProduct = async() => {
-    num.value += 1
+  
   const {code, message} = await request<any>({
-    url: '/api/admin/cart/add',
+    url: '/api/cart/add?id=' + '9e42f78e-a403-11ee-a81d-0242ac110002',
     method: 'post',
-    data: undefined
+    data: {}
   })
+  if (code) {
+    num.value += 1
+  }else{
+    ElMessage.error(message)
+  }
 }
 </script>
