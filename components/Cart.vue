@@ -2,11 +2,7 @@
     <ClientOnly>
         <el-drawer :model-value="value"  title="购物车" direction="rtl" :before-close="close">
             <div class="w-full h-fit grid grid-cols-2 gap-2">
-                <CartItem />
-                <CartItem />
-                <CartItem />
-                <CartItem />
-                <CartItem />
+                <CartItem @getList="getList" v-for="(item,index) in catList" :key="index" :id="item.id" :amount="item.amount" :price="item.price" :name="item.name"/>
             </div>
             <template #footer>
                 <div class="flex justify-between items-end">
@@ -27,8 +23,25 @@ defineProps<{
     value: boolean
 }>()
 const emits = defineEmits(["close"])
-
+const catList = ref<any[]>([])
 const close =() => {
     emits("close")
 }
+const getList = async() => {
+    const {code,data, message} = await request<any>({
+    url: '/api/cart/list',
+    method: 'post',
+    data: {}
+  })
+  if (code) {
+    catList.value = data.products
+    console.log(catList.value);
+    
+  }else{
+    ElMessage.error(message)
+  }
+}
+defineExpose({
+    getList
+})
 </script>

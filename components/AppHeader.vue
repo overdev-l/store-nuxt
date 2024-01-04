@@ -58,7 +58,7 @@
           </div>
         </div>
       </nav>
-      <Cart :value="cartShow" @close="cartClose"/>
+      <Cart ref="childCart" :value="cartShow" @close="cartClose"/>
       <Address :value="addressShow" @close="addressClose"/>
       <Address :value="addressShow" @close="addressClose"/>
       <Order :value="orderShow" @close="orderClose"/>
@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import { UserStore } from '~/store/user';
 
-
+const childCart = ref<any>();
 
 const route = useRoute()
 const router = useRouter()
@@ -81,6 +81,7 @@ const clickCart = () => {
     router.push("/login")
   } else {
     cartShow.value = true
+    childCart.value.getList();
   }
 }
 
