@@ -59,8 +59,7 @@
         </div>
       </nav>
       <Cart ref="childCart" :value="cartShow" @close="cartClose"/>
-      <Address :value="addressShow" @close="addressClose"/>
-      <Address :value="addressShow" @close="addressClose"/>
+      <Address ref="AddressRef" :value="addressShow" @close="addressClose"/>
       <Order :value="orderShow" @close="orderClose"/>
     </div>
   </div>
@@ -69,6 +68,7 @@
 import { UserStore } from '~/store/user';
 
 const childCart = ref<any>();
+const AddressRef = ref<any>();
 
 const route = useRoute()
 const router = useRouter()
@@ -90,6 +90,7 @@ const manageOrder = () => {
 }
 const manageAddress = () => {
   addressShow.value = true
+  AddressRef.value.getList();
 }
 
 const loginOut = () => {
