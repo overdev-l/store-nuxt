@@ -66,7 +66,7 @@
 </template>
 <script setup lang="ts">
 import { UserStore } from '~/store/user';
-
+import { parseJwt } from "~/utils";
 const childCart = ref<any>();
 const AddressRef = ref<any>();
 
@@ -114,4 +114,9 @@ const addressClose = () => {
 const orderClose = () => {
   orderShow.value = false
 }
+onMounted(()=>{
+  const result = parseJwt()
+  const user = UserStore()
+  user.setUser(result.claims)
+})
 </script>
