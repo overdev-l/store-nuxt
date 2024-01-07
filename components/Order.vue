@@ -38,8 +38,8 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
-              <el-button v-if="scope.row.status ===2 || scope.row.status ===3" link type="warning" size="small" @click="refund(scope.row.id)">退款</el-button>
-              <el-button v-if="scope.row.status ===3" link type="success" size="small" @click="receiptGoods">确认收货</el-button>
+              <el-button v-if="scope.row.paymentStatus ===2" link type="warning" size="small" @click="refund(scope.row.id)">退款</el-button>
+              <el-button v-if="scope.row.status ===3" link type="success" size="small" @click="receiptGoods(scope.row.id)">确认收货</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -84,8 +84,22 @@ const refund =async(orderId:any)=>{
     getList()
   }
 } 
-const receiptGoods = async()=>{
-
+const receiptGoods = async(orderId:any)=>{
+  let params = {
+    orderId: orderId
+  }
+  const { code, data, message } = await request<any>({
+    url: '/api/order/submit',
+    method: 'post',
+    data: params
+  })
+  if(code){
+    ElMessage({
+    message: message,
+    type: 'success',
+  })
+    getList()
+  }
 }
 defineExpose({
   getList
