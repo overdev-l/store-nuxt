@@ -60,7 +60,7 @@
       </nav>
       <Cart ref="childCart" :value="cartShow" @close="cartClose"/>
       <Address ref="AddressRef" :value="addressShow" @close="addressClose"/>
-      <Order :value="orderShow" @close="orderClose"/>
+      <Order ref="orderRef" :value="orderShow" @close="orderClose"/>
     </div>
   </div>
 </template>
@@ -69,6 +69,7 @@ import { UserStore } from '~/store/user';
 import { parseJwt } from "~/utils";
 const childCart = ref<any>();
 const AddressRef = ref<any>();
+const orderRef = ref<any>();
 
 const route = useRoute()
 const router = useRouter()
@@ -87,6 +88,7 @@ const clickCart = () => {
 
 const manageOrder = () => {
   orderShow.value = true
+  orderRef.value.getList();
 }
 const manageAddress = () => {
   addressShow.value = true
