@@ -31,24 +31,24 @@
 <!--    </div>-->
     <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
       <div class="flex flex-col space-y-1.5 p-6">
-        <h2 class="text-xl font-bold">土豆</h2>
-        <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 w-fit text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
+        <h2 class="text-xl font-bold">{{ $props.item.name }}</h2>
+        <div style="color: aliceblue;" class="inline-flex items-center rounded-full border px-2.5 py-0.5 w-fit text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
           有机产品
         </div>
       </div>
       <div class="p-6">
         <img
-            src="/xx.jpg"
+            :src="props.item.cover"
             alt="Apple"
             class="w-full h-64 object-cover"
             width="200"
             height="200"
             style="aspect-ratio: 200 / 200; object-fit: cover;"
         />
-        <p class="mt-4">来自本地农场的新鲜有机苹果。脆甜多汁。</p>
+        <p class="mt-4">{{ props.item.title }}</p>
         <div class="flex items-center justify-between mt-4">
           <div class="flex items-end justify-between">
-            <span class="text-lg font-bold">¥2.99/</span>
+            <span class="text-lg font-bold">¥{{$props.item.price}}/</span>
             <span class="text-sm font-bold">500g</span>
           </div>
           <button v-if="num <= 0" @click="addProduct" class="py-2 px-3 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-semibold rounded-md shadow focus:outline-none">
@@ -68,11 +68,12 @@
 
 <script setup lang="ts">
 import { ElBadge } from 'element-plus';
+const props = defineProps(['item']);
 const num = ref(0)
 const addProduct = async() => {
   
   const {code, message} = await request<any>({
-    url: '/api/cart/add?id=' + '23d60681-a7ff-11ee-a469-0242ac110002',
+    url: '/api/cart/add?id=' + props.item.id,
     method: 'post',
     data: {}
   })
@@ -82,4 +83,5 @@ const addProduct = async() => {
     ElMessage.error(message)
   }
 }
+
 </script>
