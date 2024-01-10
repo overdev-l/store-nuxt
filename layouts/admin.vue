@@ -20,26 +20,49 @@
 </template>
 <script setup lang="ts">
 const route = useRoute()
-const menu = [
-  {
-    name: '主页',
-    path: '/doshboard'
-  },
-  {
-    name: '商品管理',
-    path: '/manageGoods'
-  },
-  {
-    name: '订单管理',
-    path: '/manageOrders'
-  },
-  {
-    name: '店铺管理',
-    path: '/manageStore'
-  },
-  {
-    name: '账号管理',
-    path: '/manageUser'
-  },
-]
+import { UserStore } from '~/store/user';
+const menu = ref<any>([])
+const user = UserStore()
+onMounted(() => {
+  if (user.role === 0) {
+    menu.value = [
+      {
+        name: '主页',
+        path: '/doshboard'
+      },
+      {
+        name: '商品管理',
+        path: '/manageGoods'
+      },
+      {
+        name: '订单管理',
+        path: '/manageOrders'
+      },
+      {
+        name: '店铺管理',
+        path: '/manageStore'
+      },
+      {
+        name: '账号管理',
+        path: '/manageUser'
+      },
+    ]
+  } else {
+    menu.value = [
+      {
+        name: '主页',
+        path: '/doshboard'
+      },
+      {
+        name: '商品管理',
+        path: '/manageGoods'
+      },
+      {
+        name: '订单管理',
+        path: '/manageOrders'
+      },
+    ]
+  }
+
+})
 </script>

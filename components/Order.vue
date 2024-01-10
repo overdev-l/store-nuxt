@@ -14,7 +14,7 @@
             <p>商品id:{{ item.productId }}</p>
             <p>商品名称:{{ item.productName }}</p>
             <p>商品单价:{{ item.unitPrice }}</p>
-            <p>收货地址:{{ props.row.address.provinceName + props.row.address.cityName  + props.row.address.areaName  + props.row.address.streetName}}</p>
+            <p v-if="props.row.address">收货地址:{{ props.row.address.provinceName + props.row.address.cityName  + props.row.address.areaName  + props.row.address.streetName}}</p>
           </div>
         </div>
       </template>

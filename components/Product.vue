@@ -55,7 +55,7 @@
             添加到购物车
           </button>
           <el-badge :value="num" v-if="num > 0">
-            <Icon name="dashicons:cart" size="30" color="#f7be38" class="cursor-pointer" @click="addProduct" />
+            <Icon name="mdi:cart" size="30" color="#f7be38" class="cursor-pointer" @click="addProduct" />
           </el-badge>
         </div>
         <NuxtLink to="/shopList" class="mt-2 inline-block underline text-sm" href="#">
