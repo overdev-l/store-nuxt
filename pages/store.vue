@@ -4,7 +4,7 @@
     <button class="btn btn-primary" @click="search">搜索</button>
   </div>
     <div class="w-full h-full grid grid-cols-4 gap-2 justify-center items-center mt-3">
-        <Product v-for="(item,index) in dataList" :item="item" :key="index"/>
+        <Product  v-for="(item,index) in dataList" :item="item" :key="index"/>
     </div>
     <div class="w-full justify-center flex mt-2 pb-5">
         <el-pagination layout="prev, pager, next"   @size-change="handleSizeChange"
@@ -12,6 +12,8 @@
     </div>
 </template>
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
+const route = useRoute()
 const name = ref('')
 const page = ref(1)
 const limit = ref(10)
@@ -23,6 +25,7 @@ const search = async() => {
     "limit": limit.value,
     "name": name.value
 }
+
 const { code, data, message } = await request<any>({
         url: '/api/public/products',
         method: 'post',
