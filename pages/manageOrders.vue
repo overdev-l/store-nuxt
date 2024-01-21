@@ -1,293 +1,113 @@
 <template>
-     <div class="w-full h-full">
-        <div class="w-full h-fit">
-            <form action="" class="flex gap-2 items-end" ref="formRef" @submit.prevent>
-                <label class="form-control w-full max-w-xs">
-                    <div class="label">
-                        <span class="label-text">订单id</span>
-                    </div>
-                    <input type="text" placeholder="订单id" class="input input-sm input-bordered input-info w-full max-w-xs"
-                        v-model="orderId" />
-                </label>
-                <label class="form-control w-full max-w-xs">
-                    <div class="label">
-                        <span class="label-text">商品名称</span>
-                    </div>
-                    <input type="text" placeholder="订单名称" class="input input-sm input-bordered input-info w-full max-w-xs"
-                        v-model="orderName" />
-                </label>
-                <button class="btn btn-outline btn-info btn-sm" @click="submit">查询</button>
-                <button type="reset" class="btn btn-outline  btn-sm" @click="reset">重置</button>
-            </form>
-        </div>
-        <el-table :data="tableData" :border="parentBorder" style="width: 100%">
-    <el-table-column type="expand">
-      <template #default="props">
-        <div m="4">
-          <p m="t-0 b-2">State: {{ props.row.state }}</p>
-          <p m="t-0 b-2">City: {{ props.row.city }}</p>
-          <p m="t-0 b-2">Address: {{ props.row.address }}</p>
-          <p m="t-0 b-2">Zip: {{ props.row.zip }}</p>
-          <!-- <h3>Family</h3> -->
-          <!-- <el-table :data="props.row.family" :border="childBorder">
-            <el-table-column label="Name" prop="name" />
-            <el-table-column label="State" prop="state" />
-            <el-table-column label="City" prop="city" />
-            <el-table-column label="Address" prop="address" />
-            <el-table-column label="Zip" prop="zip" />
-          </el-table> -->
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column label="Date" prop="date" />
-    <el-table-column label="Name" prop="name" />
-  </el-table>
-     </div>
+  <div class="w-full h-full">
+    <div class="w-full h-fit">
+      <form action="" class="flex gap-2 items-end" ref="formRef" @submit.prevent>
+        <label class="form-control w-full max-w-xs">
+          <div class="label">
+            <span class="label-text">订单id</span>
+          </div>
+          <input type="text" placeholder="订单id" class="input input-sm input-bordered input-info w-full max-w-xs"
+            v-model="orderId" />
+        </label>
+        <label class="form-control w-full max-w-xs">
+          <div class="label">
+            <span class="label-text">订单状态</span>
+          </div>
+          <input type="text" placeholder="订单名称" class="input input-sm input-bordered input-info w-full max-w-xs"
+            v-model="status" />
+        </label>
+        <button class="btn btn-outline btn-info btn-sm" @click="submit">查询</button>
+        <button type="reset" class="btn btn-outline  btn-sm" @click="reset">重置</button>
+      </form>
+    </div>
+    <el-table :data="tableData" :border="parentBorder" style="width: 100%">
+      <el-table-column type="expand">
+        <template #default="props">
+          <div m="4" style="margin-left: 50px;">
+            <p m="t-0 b-2">收货地址: {{ props.row.address.provinceName +  props.row.address.cityName + props.row.address.areaName + props.row.address.streetName + props.row.address.detail }}</p>
+            <p m="t-0 b-2">手机号: {{ props.row.address.phone }}</p>
+            <p m="t-0 b-2">姓名: {{ props.row.address.name }}</p>
+            <div v-for="(item,index) in props.row.products" :key="index">
+              <img width="200" height="200" :src="item.cover" alt="">
+              <p>商品名称: {{ item.productName }}</p>
+              <p>数量: {{ item.quantity }}</p>
+              <p>单价: {{ item.unitPrice }}</p>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="订单ID" prop="id" />
+      <el-table-column label="店铺ID" prop="storeId" />
+      <el-table-column label="支付方式" prop="paymentMethod">
+        <template #default="scope">
+          {{ scope.row.paymentMethod === 1 ? '微信' :  scope.row.paymentMethod === 2 ? '支付宝' : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="支付状态" prop="paymentStatus">
+        <template #default="scope">
+          {{ scope.row.paymentStatus === 1 ? '未支付' :  scope.row.paymentStatus === 2 ? '已支付' : scope.row.paymentStatus === 3 ? '退款中' : scope.row.paymentStatus === 4 ? '已退款' : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="订单状态" prop="status">
+        <template #default="scope">
+          {{ scope.row.status === 1 ? '已创建' :  scope.row.status === 2 ? '待发货' : scope.row.status === 3 ? '已发货' : scope.row.status === 4 ? '已完成' : scope.row.status === 5 ? '已取消' : scope.row.status === 6 ? '已退款' : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="订单总金额" prop="totalPrice" />
+    </el-table>
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="prev, pager, next"
+        :total="total" />
+  </div>
 </template>
 <script setup lang="ts">
 import type { FormInstance, UploadRequestHandler, FormRules } from 'element-plus';
 definePageMeta({
-    layout: 'admin'
+  layout: 'admin'
 })
 const parentBorder = ref(false)
-const childBorder = ref(false)
 const orderId = ref('')
-const orderName = ref('')
 const page = ref(1)
 const limit = ref(10)
+const status = ref(0)  // 订单状态0全部1已创建2待发货3待退款4待确认5已完成
 const tableData = ref<any>([
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    state: 'California',
-    city: 'San Francisco',
-    address: '3650 21st St, San Francisco',
-    zip: 'CA 94114',
-    family: [
-      {
-        name: 'Jerry',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Spike',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Tyke',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-    ],
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    state: 'California',
-    city: 'San Francisco',
-    address: '3650 21st St, San Francisco',
-    zip: 'CA 94114',
-    family: [
-      {
-        name: 'Jerry',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Spike',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Tyke',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-    ],
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    state: 'California',
-    city: 'San Francisco',
-    address: '3650 21st St, San Francisco',
-    zip: 'CA 94114',
-    family: [
-      {
-        name: 'Jerry',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Spike',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Tyke',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-    ],
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    state: 'California',
-    city: 'San Francisco',
-    address: '3650 21st St, San Francisco',
-    zip: 'CA 94114',
-    family: [
-      {
-        name: 'Jerry',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Spike',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Tyke',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-    ],
-  },
-  {
-    date: '2016-05-08',
-    name: 'Tom',
-    state: 'California',
-    city: 'San Francisco',
-    address: '3650 21st St, San Francisco',
-    zip: 'CA 94114',
-    family: [
-      {
-        name: 'Jerry',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Spike',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Tyke',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-    ],
-  },
-  {
-    date: '2016-05-06',
-    name: 'Tom',
-    state: 'California',
-    city: 'San Francisco',
-    address: '3650 21st St, San Francisco',
-    zip: 'CA 94114',
-    family: [
-      {
-        name: 'Jerry',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Spike',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Tyke',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-    ],
-  },
-  {
-    date: '2016-05-06',
-    name: 'Tom',
-    state: 'California',
-    city: 'San Francisco',
-    address: '3650 21st St, San Francisco',
-    zip: 'CA 94114',
-    family: [
-      {
-        name: 'Jerry',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Spike',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-      {
-        name: 'Tyke',
-        state: 'California',
-        city: 'San Francisco',
-        address: '3650 21st St, San Francisco',
-        zip: 'CA 94114',
-      },
-    ],
-  },
-    ])
-const total = ref()
-const submit = () => {
-    page.value = 1
-    limit.value = 10
-    submitQuery()
+  
+])
+const total = ref(0)
+const handleSizeChange = (val: number) => {
+  limit.value = val
 }
-const submitQuery = () => {
-
+const handleCurrentChange = (val: number) => {
+  page.value = val
+  submitQuery()
+}
+const submit = () => {
+  page.value = 1
+  limit.value = 10
+  submitQuery()
+}
+const submitQuery = async () => {
+  let params = {
+    "page": page.value,
+    "limit": limit.value,
+    "status": status.value,
+    "id": orderId.value
+  }
+  const { code, data, message } = await request<any>({
+    url: '/api/admin/order/list',
+    method: 'post',
+    data: params
+  })
+  total.value = data.total
+  tableData.value = data.list
 }
 const reset = () => {
-    page.value = 1
-    limit.value = 10
-    orderId.value = ''
-    orderName.value = ''
-    submitQuery()
+  page.value = 1
+  limit.value = 10
+  orderId.value = ''
+  status.value = 0
+  submitQuery()
 }
+onMounted(() => {
+  submitQuery()
+})
 </script>

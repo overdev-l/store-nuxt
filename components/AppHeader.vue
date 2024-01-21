@@ -46,7 +46,7 @@
                       </div>
                     </div>
                     <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                      <li><a @click="manageOrder" v-if="user.role ==1">订单管理</a></li>
+                      <li><a @click="manageOrder">订单管理</a></li>
                       <li><a @click="manageAddress">收货地址</a></li>
                       <li><a @click="loginOut">退出登陆</a></li>
                     </ul>
@@ -119,7 +119,7 @@ const orderClose = () => {
 onMounted(()=>{
   const result = parseJwt()
   const user = UserStore()
-  if(!result.claims) return
+  if(!result?.claims) return
   user.setUser(result.claims)
 })
 </script>
