@@ -54,6 +54,14 @@
         </template>
       </el-table-column>
       <el-table-column label="订单总金额" prop="totalPrice" />
+      <el-table-column label="操作">
+        <template #default="scope">
+          <div>
+            <el-button @click="refund(scope.row)" v-if="scope.row.paymentStatus === 3" type="danger">退款</el-button>
+            <el-button @click="deliverGoods(scope.row)" v-if="scope.row.status === 2" type="primary">发货</el-button>
+          </div>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="prev, pager, next"
         :total="total" />
@@ -73,6 +81,28 @@ const tableData = ref<any>([
   
 ])
 const total = ref(0)
+const refund = async(item:any)=>{
+  let params = {
+    orderId: item.id
+  }
+  const { code, data, message } = await request<any>({
+    url: '/api/admin/order/submitCancel',
+    method: 'post',
+    data: params
+  })
+  submitQuery()
+}
+const deliverGoods = async(item:any) => {
+  let params = {
+    orderId: item.id
+  }
+  const { code, data, message } = await request<any>({
+    url: '/api/admin/order/submitSend',
+    method: 'post',
+    data: params
+  })
+  submitQuery()
+}
 const handleSizeChange = (val: number) => {
   limit.value = val
 }
