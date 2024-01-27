@@ -4,17 +4,80 @@ definePageMeta({
 })
 const userId = ref('')
 const storeName=ref('')
-const data = (new Array(8)).fill(0)
-
-const submitQuery = (e: Event) => {
-  e.preventDefault()
+const tableData = ref<any[]>([])
+const limit = ref(10)
+const page = ref(1)
+const total = ref(0)
+const submit = () => {
+  getList()
 }
+const resect = () =>{
+  userId.value = ''
+  limit.value = 10
+  page.value = 1
+  storeName.value = ''
+}
+const getList = async() =>{
+  let params = {
+    id: userId.value,
+    limit: limit.value,
+    page: page.value,
+    name: storeName.value
+  }
+  const { code, data, message } = await request<any>({
+    url: '/api/super/admin/store/list',
+    method: 'post',
+    data: params
+  })
+  total.value = data.total
+  tableData.value = data.list
+  console.log(tableData.value);
+  
+}
+const handleSizeChange = (val: number) => {
+  limit.value = val
+}
+const handleCurrentChange = (val: number) => {
+  page.value = val
+  getList()
+}
+const dead = async(p:any) =>{
+  const { code, data, message } = await request<any>({
+    url: '/api/super/admin/store/disabled?id=' + p.id,
+    method: 'post',
+    data: {}
+  })
+  if(code === 1){
+    ElMessage({
+    message: '成功',
+    type: 'success',
+  })
+  }
+  getList()
+}
+const unseal = async(p:any) =>{
+  const { code, data, message } = await request<any>({
+    url: '/api/super/admin/store/lift?id=' + p.id,
+    method: 'post',
+    data: {}
+  })
+  if(code === 1){
+    ElMessage({
+    message: '成功',
+    type: 'success',
+  })
+  }
+  getList()
+}
+onMounted(()=>{
+  getList()
+})
 </script>
 
 <template>
   <div class="w-full h-full">
     <div class="w-full h-fit">
-      <form action="" class="flex gap-2 items-end" ref="formRef" @submit="submitQuery">
+      <form class="flex gap-2 items-end"  @submit.prevent>
         <label class="form-control w-full max-w-xs">
           <div class="label">
             <span class="label-text">用户ID</span>
@@ -29,8 +92,8 @@ const submitQuery = (e: Event) => {
           <input type="text" placeholder="店铺名称"
                  class="input input-sm input-bordered input-info w-full max-w-xs" v-model="storeName" />
         </label>
-        <button type="submit" class="btn btn-outline btn-info btn-sm">查询</button>
-        <button type="reset" class="btn btn-outline  btn-sm">重置</button>
+        <button class="btn btn-outline btn-info btn-sm" @click="submit">查询</button>
+        <button  @click="resect" type="reset" class="btn btn-outline  btn-sm">重置</button>
       </form>
     </div>
     <div class="overflow-x-auto">
@@ -41,47 +104,48 @@ const submitQuery = (e: Event) => {
           <th>封面图</th>
           <th>店铺名称</th>
           <th>运营状态</th>
-          <th>创建时间</th>
           <th>店铺ID</th>
           <th>用户ID</th>
-          <th></th>
+          <th>操作</th>
         </tr>
         </thead>
         <tbody>
         <!-- row 1 -->
-        <tr v-for="(p, index) in data" :key="index">
+        <tr v-for="(p, index) in tableData" :key="index">
           <td>
             <div class="flex items-center gap-3">
               <div class="avatar">
                 <div class="mask mask-squircle w-12 h-12">
-                  <img src="/xx.jpg" alt="Avatar Tailwind CSS Component" />
+                  <img :src="p.img" alt="Avatar Tailwind CSS Component" />
                 </div>
               </div>
             </div>
           </td>
           <td>
-            <span class="badge badge-ghost badge-sm">蘑菇</span>
+            <span class="badge badge-ghost badge-sm">
+              {{ p.name }}
+            </span>
           </td>
           <td>
-            <div class="max-w-[150px]">东北大蘑菇大棚培育东北大蘑菇东北大蘑菇大棚培育东北大蘑菇</div>
+            <div class="max-w-[150px]">{{ p.dead === null ? '正常' : '封禁' }}</div>
           </td>
-          <td><span class="badge badge-ghost badge-sm">xxxxxxxxx</span></td>
-          <td><span class="badge badge-ghost badge-sm">xxxxxxxxx</span></td>
-          <th>
-            <button class="btn btn-ghost btn-xs">编辑</button>
-            <button class="btn btn-ghost btn-xs">删除</button>
-          </th>
+          <td><span class="badge badge-ghost badge-sm">{{ p.ownerId }}</span></td>
+          <td><span class="badge badge-ghost badge-sm">{{ p.id }}</span></td>
+          <td>
+            <button v-if="p.dead === null" @click="dead(p)" class="btn btn-ghost btn-xs">
+               封禁
+            </button>
+            <button v-if="p.dead === null" @click="unseal(p)" class="btn btn-ghost btn-xs">
+                解封
+            </button>
+          </td>
         </tr>
 
         </tbody>
       </table>
       <div class="join w-full">
-        <button class="join-item btn">«</button>
-        <button class="join-item btn">1</button>
-        <button class="join-item btn bg-info">2</button>
-        <button class="join-item btn">3</button>
-        <button class="join-item btn">4</button>
-        <button class="join-item btn">»</button>
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="prev, pager, next"
+        :total="total" />
       </div>
     </div>
   </div>
