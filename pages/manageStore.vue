@@ -132,10 +132,10 @@ onMounted(()=>{
           <td><span class="badge badge-ghost badge-sm">{{ p.ownerId }}</span></td>
           <td><span class="badge badge-ghost badge-sm">{{ p.id }}</span></td>
           <td>
-            <button v-if="p.dead === null" @click="dead(p)" class="btn btn-ghost btn-xs">
+            <button v-if="!p.disabled" @click="dead(p)" class="btn btn-ghost btn-xs">
                封禁
             </button>
-            <button v-if="p.dead === null" @click="unseal(p)" class="btn btn-ghost btn-xs">
+            <button v-if="p.disabled" @click="unseal(p)" class="btn btn-ghost btn-xs">
                 解封
             </button>
           </td>
