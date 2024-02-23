@@ -35,11 +35,13 @@
                 <div class="stat-value">{{ dataObj.refund }}</div>
                 <div class="stat-desc">↘︎ 90 (14%)</div>
             </div>
-
         </div>
+    <div id="chartId" style="width: 100%; height: 70%;"></div>
     </div>
 </template>
 <script setup lang="ts">
+import * as echarts from 'echarts';
+
 definePageMeta({
     layout: 'admin'
 })
@@ -65,5 +67,24 @@ const infoData = async() =>{
   })
   console.log(data);
   dataObj.value = data
+  var myChart = echarts.init(document.getElementById('chartId'));
+// 绘制图表
+myChart.setOption({
+  title: {
+    text: ''
+  },
+  tooltip: {},
+  xAxis: {
+    data: ['商品数量', '销售额', '实际销售额', '订单量', '客单价', '退货率']
+  },
+  yAxis: {},
+  series: [
+    {
+      name: '销量',
+      type: 'bar',
+      data: [dataObj.value.productNum, dataObj.value.orderTotalPrice, dataObj.value.realPrice, dataObj.value.orderNum, dataObj.value.unitPrice, dataObj.value.refund]
+    }
+  ]
+});
 }
 </script>

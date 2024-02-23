@@ -26,6 +26,7 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@pinia/nuxt": "^0.5.1",
     "cos-js-sdk-v5": "^1.5.0",
+    "echarts": "^5.5.0",
     "normalize.css": "^8.0.1",
     "pinia": "^2.1.7",
     "reset-css": "^5.0.2"
