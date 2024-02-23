@@ -65,7 +65,6 @@ const infoData = async() =>{
     method: 'post',
     data: params
   })
-  console.log(data);
   dataObj.value = data
   var myChart = echarts.init(document.getElementById('chartId'));
 // 绘制图表
